@@ -1,11 +1,17 @@
 import 'package:defect_tracking_system/screens/auth/login.dart';
+import 'package:defect_tracking_system/screens/defects/all_defects.dart';
 import 'package:defect_tracking_system/screens/home.dart';
+import 'package:defect_tracking_system/screens/reviews/reviews_page.dart';
 import 'package:defect_tracking_system/screens/splash.dart';
 import 'package:defect_tracking_system/utils/app_route_observer.dart';
+import 'package:defect_tracking_system/utils/navigation_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const DefectTrackingApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => NavigationProvider()),
+  ], child: const DefectTrackingApp()));
 }
 
 class DefectTrackingApp extends StatelessWidget {
@@ -19,14 +25,46 @@ class DefectTrackingApp extends StatelessWidget {
       navigatorObservers: [AppRouteObserver()],
       routes: {
         '/login': (_) => const LoginPage(),
-        '/home': (_) => const HomeScreen()
+        '/home': (_) => const HomeScreen(),
+        '/reviews': (_) => const ReviewsTabView(),
+        '/all-defects': (_) => const AllDefectsPage()
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        listTileTheme: ListTileThemeData(
+            selectedTileColor: Colors.blue,
+            selectedColor: Colors.white,
+            minVerticalPadding: 10,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(13))),
+        cardTheme: const CardTheme(
+          surfaceTintColor: Colors.white,
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
+        pageTransitionsTheme: PageTransitionsTheme(
+          // makes all platforms that can run Flutter apps display routes without any animation
+          builders: {
+            for (var k in TargetPlatform.values.toList())
+              k: const _InanimatePageTransitionsBuilder()
+          },
+        ),
       ),
       initialRoute: '/splash',
       home: const SplashPage(),
     );
+  }
+}
+
+class _InanimatePageTransitionsBuilder extends PageTransitionsBuilder {
+  const _InanimatePageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+      PageRoute<T> route,
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return child;
   }
 }
