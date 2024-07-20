@@ -11,7 +11,7 @@ class Review {
 class ReviewsList extends StatelessWidget {
   final List<Review> reviews;
 
-  ReviewsList({required this.reviews});
+  const ReviewsList({super.key, required this.reviews});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class ReviewsList extends StatelessWidget {
 class ReviewCard extends StatelessWidget {
   final Review review;
 
-  ReviewCard({required this.review});
+  const ReviewCard({super.key, required this.review});
 
   @override
   Widget build(BuildContext context) {

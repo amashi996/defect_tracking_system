@@ -15,7 +15,7 @@ class ReviewsTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      pageTitle: Text('All reviews'),
+      pageTitle: const Text('All reviews'),
       showBackButton: false,
       body: DefaultTabController(
         length: 2,
@@ -23,7 +23,7 @@ class ReviewsTabView extends StatelessWidget {
           children: [
             Container(
               color: Colors.blue,
-              child: TabBar(
+              child: const TabBar(
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white70,
                 indicatorColor: Colors.white,

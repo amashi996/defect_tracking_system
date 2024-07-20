@@ -1,5 +1,6 @@
 import 'package:defect_tracking_system/screens/auth/login.dart';
 import 'package:defect_tracking_system/screens/defects/all_defects.dart';
+import 'package:defect_tracking_system/screens/defects/providers/Defect.dart';
 import 'package:defect_tracking_system/screens/home.dart';
 import 'package:defect_tracking_system/screens/reviews/reviews_page.dart';
 import 'package:defect_tracking_system/screens/splash.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => NavigationProvider()),
+    ChangeNotifierProvider(create: (_) => DefectProvider())
   ], child: const DefectTrackingApp()));
 }
 

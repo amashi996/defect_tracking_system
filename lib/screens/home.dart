@@ -160,7 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/all-defects');
+                      },
                       child: const Text('View More'),
                     ),
                   ),
