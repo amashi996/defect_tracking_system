@@ -1,65 +1,58 @@
 import 'package:defect_tracking_system/screens/reviews/providers/Review.dart';
+import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
+import 'package:defect_tracking_system/screens/reviews/review_detail_page.dart';
 import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// class ReviewPage extends StatefulWidget {
-//   const ReviewPage({super.key});
+class ReviewListScreen extends StatefulWidget {
+  @override
+  _ReviewListScreenState createState() => _ReviewListScreenState();
+}
 
-//   @override
-//   State<ReviewPage> createState() => _ReviewPageState();
-// }
-
-class ReviewsTabView extends StatelessWidget {
-  const ReviewsTabView({super.key});
+class _ReviewListScreenState extends State<ReviewListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ReviewProvider>(context, listen: false).fetchReviews();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      pageTitle: const Text('All reviews'),
+      pageTitle: Text('Reviews'),
       showBackButton: false,
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.blue,
-              child: const TabBar(
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white70,
-                indicatorColor: Colors.white,
-                tabs: [
-                  Tab(icon: Icon(Icons.sentiment_satisfied), text: 'Given'),
-                  Tab(icon: Icon(Icons.sentiment_neutral), text: 'Received'),
-                ],
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ReviewsList(reviews: getUserGivenReviews()),
-                  ReviewsList(reviews: getUserReceivedReviews()),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: Consumer<ReviewProvider>(
+        builder: (context, reviewProvider, child) {
+          if (reviewProvider.reviews.isEmpty) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            itemCount: reviewProvider.reviews.length,
+            itemBuilder: (context, index) {
+              Review review = reviewProvider.reviews[index];
+              return ListTile(
+                leading: Icon(Icons.account_circle),
+                title: Text(review.name),
+                subtitle: Text(review.reviewText),
+                trailing: Text(
+                  '${review.likes.length} likes',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ReviewDetailScreen(reviewId: review.id),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
-}
-
-List<Review> getUserGivenReviews() {
-  // Replace this with actual data fetching logic
-  return [
-    Review(reviewer: 'User A', content: 'Great job!', rating: 4.5),
-    Review(reviewer: 'User B', content: 'Good work', rating: 4.0),
-  ];
-}
-
-List<Review> getUserReceivedReviews() {
-  // Replace this with actual data fetching logic
-  return [
-    Review(reviewer: 'User C', content: 'Well done!', rating: 5.0),
-    Review(reviewer: 'User D', content: 'Nice effort', rating: 3.5),
-  ];
 }

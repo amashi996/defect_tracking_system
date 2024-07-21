@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
-import 'package:defect_tracking_system/utils/navigation_provider.dart';
+// import 'package:defect_tracking_system/utils/navigation_provider.dart';
 
 import '../constants/route_names.dart';
 import 'app_route_observer.dart';
@@ -78,7 +78,7 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
   }
 
   List<Widget> drawerPages(BuildContext context) {
-    final navigationProvider = Provider.of<NavigationProvider>(context);
+    //final navigationProvider = Provider.of<NavigationProvider>(context);
 
     return [
       const UserAccountsDrawerHeader(
@@ -128,14 +128,28 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
           selected: _selectedRoute == RouteNames.defects,
         ),
       ),
-      // ListTile(
-      //   leading: NavPageIcons.favouriteIcon,
-      //   title: const Text(PageTitles.volunteer),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.volunteer);
-      //   },
-      //   selected: _selectedRoute == RouteNames.volunteer,
-      // ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(5, 5, 10, 4),
+        child: ListTile(
+          leading: const Icon(Icons.leaderboard),
+          title: const Text('Leaderboard'),
+          onTap: () async {
+            await _navigateTo(context, RouteNames.leaderboard);
+          },
+          selected: _selectedRoute == RouteNames.leaderboard,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(5, 5, 10, 4),
+        child: ListTile(
+          leading: const Icon(Icons.account_circle_rounded),
+          title: const Text('Profile'),
+          onTap: () async {
+            await _navigateTo(context, RouteNames.profile);
+          },
+          selected: _selectedRoute == RouteNames.profile,
+        ),
+      ),
       // ListTile(
       //   leading: NavPageIcons.codeIcon,
       //   title: const Text(PageTitles.projects),

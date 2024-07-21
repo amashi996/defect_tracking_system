@@ -1,60 +1,91 @@
-import 'package:flutter/material.dart';
+class ReviewComment {
+  final String user;
+  final String text;
+  final String name;
+  final String avatar;
+  final DateTime date;
 
-class Review {
-  final String reviewer;
-  final String content;
-  final double rating;
+  ReviewComment({
+    required this.user,
+    required this.text,
+    required this.name,
+    required this.avatar,
+    required this.date,
+  });
 
-  Review({required this.reviewer, required this.content, required this.rating});
-}
-
-class ReviewsList extends StatelessWidget {
-  final List<Review> reviews;
-
-  const ReviewsList({super.key, required this.reviews});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: reviews.length,
-      itemBuilder: (context, index) {
-        return ReviewCard(review: reviews[index]);
-      },
+  factory ReviewComment.fromJson(Map<String, dynamic> json) {
+    return ReviewComment(
+      user: json['user'],
+      text: json['text'],
+      name: json['name'] ?? '',
+      avatar: json['avatar'] ?? '',
+      date: DateTime.parse(json['date']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user,
+      'text': text,
+      'name': name,
+      'avatar': avatar,
+      'date': date.toIso8601String(),
+    };
   }
 }
 
-class ReviewCard extends StatelessWidget {
-  final Review review;
+class Review {
+  final String id;
+  final String user;
+  final String reviewText;
+  final String name;
+  final String avatar;
+  final DateTime reviewDate;
+  final List<String> likes;
+  final List<ReviewComment> reviewComments;
 
-  const ReviewCard({super.key, required this.review});
+  Review({
+    required this.id,
+    required this.user,
+    required this.reviewText,
+    required this.name,
+    required this.avatar,
+    required this.reviewDate,
+    required this.likes,
+    required this.reviewComments,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              review.reviewer,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 5),
-            Text(review.content),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Icons.star, color: Colors.yellow),
-                Text(review.rating.toString()),
-              ],
-            ),
-          ],
-        ),
-      ),
+  factory Review.fromJson(Map<String, dynamic> json) {
+    var likesFromJson = json['likes'] as List;
+    List<String> likesList =
+        likesFromJson.map((i) => i['user'] as String).toList();
+
+    var commentsFromJson = json['reviewComments'] as List;
+    List<ReviewComment> commentsList =
+        commentsFromJson.map((i) => ReviewComment.fromJson(i)).toList();
+
+    return Review(
+      user: json['user'],
+      reviewText: json['reviewText'],
+      name: json['name'] ?? '',
+      avatar: json['avatar'] ?? '',
+      reviewDate: DateTime.parse(json['reviewDate']),
+      likes: likesList,
+      reviewComments: commentsList,
+      id: json['_id'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'user': user,
+      'reviewText': reviewText,
+      'name': name,
+      'avatar': avatar,
+      'reviewDate': reviewDate.toIso8601String(),
+      'likes': likes.map((i) => {'user': i}).toList(),
+      'reviewComments': reviewComments.map((i) => i.toJson()).toList(),
+    };
   }
 }
