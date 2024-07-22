@@ -1,9 +1,9 @@
 import 'package:defect_tracking_system/screens/auth/login.dart';
-import 'package:defect_tracking_system/screens/auth/providers/UserProvider.dart';
 import 'package:defect_tracking_system/screens/defects/all_defects.dart';
 import 'package:defect_tracking_system/screens/defects/providers/Defect.dart';
 import 'package:defect_tracking_system/screens/home.dart';
 import 'package:defect_tracking_system/screens/leaderboard/leaderboard.dart';
+import 'package:defect_tracking_system/screens/leaderboard/providers/leaderboard_provider.dart';
 import 'package:defect_tracking_system/screens/profile/my_profile.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/reviews_page.dart';
@@ -17,7 +17,8 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => NavigationProvider()),
     ChangeNotifierProvider(create: (_) => DefectProvider()),
-    ChangeNotifierProvider(create: (_) => ReviewProvider())
+    ChangeNotifierProvider(create: (_) => ReviewProvider()),
+    ChangeNotifierProvider(create: (_) => LeaderboardProvider())
     //  ChangeNotifierProvider(create: (_) => UserProvider())
   ], child: const DefectTrackingApp()));
 }
@@ -36,7 +37,7 @@ class DefectTrackingApp extends StatelessWidget {
         '/home': (_) => const HomeScreen(),
         '/reviews': (_) => ReviewListScreen(),
         '/all-defects': (_) => const AllDefectsPage(),
-        '/leaderboard': (_) => const LeaderBoardPage(),
+        '/leaderboard': (_) => const LeaderboardPage(),
         '/profile': (_) => const UserProfilePage(),
         '/splash': (_) => const SplashPage()
       },

@@ -10,4 +10,6 @@ class Urls {
   static String getSingleReview(String reviewId) {
     return '$baseUrl/api/reviews/$reviewId';
   }
+
+  static const String getLeaderBoard = '$baseUrl/api/leaderboard';
 }
