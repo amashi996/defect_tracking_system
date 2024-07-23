@@ -38,7 +38,7 @@ class DefectTrackingApp extends StatelessWidget {
         '/home': (_) => const HomeScreen(),
         '/reviews': (_) => const ReviewListScreen(),
         '/all-defects': (_) => const DefectsPage(),
-        '/reviews': (_) => ReviewListScreen(),
+        '/reviews': (_) => const ReviewListScreen(),
         '/all-defects': (_) => const DefectsPage(),
         '/leaderboard': (_) => const LeaderboardPage(),
         '/profile': (_) => const UserProfilePage(),
