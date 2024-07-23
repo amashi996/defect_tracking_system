@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:defect_tracking_system/constants/urls/urls.dart';
-import 'package:defect_tracking_system/screens/reviews/providers/Review.dart';
+import 'package:defect_tracking_system/screens/reviews/providers/review_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

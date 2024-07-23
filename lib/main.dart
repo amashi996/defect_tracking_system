@@ -1,6 +1,6 @@
 import 'package:defect_tracking_system/screens/auth/login.dart';
 import 'package:defect_tracking_system/screens/defects/all_defects.dart';
-import 'package:defect_tracking_system/screens/defects/providers/Defect.dart';
+import 'package:defect_tracking_system/screens/defects/providers/defect.dart';
 import 'package:defect_tracking_system/screens/home.dart';
 import 'package:defect_tracking_system/screens/leaderboard/leaderboard.dart';
 import 'package:defect_tracking_system/screens/leaderboard/providers/leaderboard_provider.dart';
@@ -35,7 +35,7 @@ class DefectTrackingApp extends StatelessWidget {
       routes: {
         '/login': (_) => const LoginPage(),
         '/home': (_) => const HomeScreen(),
-        '/reviews': (_) => ReviewListScreen(),
+        '/reviews': (_) => const ReviewListScreen(),
         '/all-defects': (_) => const AllDefectsPage(),
         '/leaderboard': (_) => const LeaderboardPage(),
         '/profile': (_) => const UserProfilePage(),

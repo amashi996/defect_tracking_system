@@ -7,8 +7,7 @@ class AppScaffold extends StatelessWidget {
       {required this.body,
       required this.pageTitle,
       required this.showBackButton,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final Widget body;
   final Widget pageTitle;
@@ -29,7 +28,7 @@ class AppScaffold extends StatelessWidget {
                 leading: showBackButton
                     ? IconButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: Icon(Icons.close))
+                        icon: const Icon(Icons.close))
                     : null,
                 title: pageTitle,
                 // when the app isn't displaying the mobile version of app, hide the menu button that is used to open the navigation drawer

@@ -1,5 +1,5 @@
 class ErrorMessages {
-  static const COULD_NOT_LAUNCH_URL = "Could not launch the URL: ";
-  static const OFFLINE =
+  static const couldNotLaunchUrl = "Could not launch the URL: ";
+  static const offline =
       "You seem to be offline 😕 .Please check your internet connection";
 }
