@@ -17,6 +17,6 @@ class Urls {
 
   static const String getAllUsers = '$baseUrl/api/auth/users';
   static String addReview(String userId) {
-    return '$baseUrl/api/reviews//addRev/$userId';
+    return '$baseUrl/api/reviews/addRev/$userId';
   }
 }
