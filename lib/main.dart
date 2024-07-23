@@ -31,7 +31,7 @@ class DefectTrackingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Defect Tracking App',
+      title: 'DefectQuest',
       navigatorObservers: [AppRouteObserver()],
       routes: {
         '/login': (_) => const LoginPage(),
