@@ -85,6 +85,12 @@ class _DefectsPageState extends State<DefectsPage> {
                       return const Center(child: Text('No defects found.'));
                     }
 
+                    // Sort defects by modifiedDate in descending order
+                    final sortedDefects = defectsProvider.defects
+                        .where((defect) => defect.modifiedDate != null)
+                        .toList()
+                        ..sort((a, b) => b.modifiedDate.compareTo(a.modifiedDate));
+
                     return PaginatedDataTable(
                       header: const Text('All Defects'),
                       columns: const [
@@ -118,7 +124,6 @@ class _DefectsPageState extends State<DefectsPage> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),*/
-                        
                         DataColumn(
                           label: Text(
                             'Actions',
@@ -136,9 +141,9 @@ class _DefectsPageState extends State<DefectsPage> {
                         ),
                       ],
                       source: DefectDataTableSource(
-                          defectsProvider.defects, context),
-                      rowsPerPage: defectsProvider.defects.length < 10
-                          ? defectsProvider.defects.length
+                          sortedDefects, context),
+                      rowsPerPage: sortedDefects.length < 10
+                          ? sortedDefects.length
                           : 10,
                       onPageChanged: (pageIndex) {
                         setState(() {
@@ -196,3 +201,4 @@ class DefectDataTableSource extends DataTableSource {
   @override
   int get selectedRowCount => 0;
 }
+

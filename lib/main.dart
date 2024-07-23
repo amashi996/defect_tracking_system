@@ -19,8 +19,8 @@ void main() {
     ChangeNotifierProvider(create: (_) => DefectsProvider()),
     ChangeNotifierProvider(create: (_) => ReviewProvider()),
     ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
-    ChangeNotifierProvider(create: (_) => DefectsProvider())
-    //  ChangeNotifierProvider(create: (_) => UserProvider())
+    ChangeNotifierProvider(create: (_) => DefectsProvider()),
+   // ChangeNotifierProvider(create: (_) => UserProvider())
   ], child: const DefectTrackingApp()));
 }
 

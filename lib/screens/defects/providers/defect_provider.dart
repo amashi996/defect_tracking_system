@@ -10,7 +10,8 @@ class Defect {
   final String defectTitle;
   final String defectStatus;
   final String assignedTo;
-  //final DateTime createdDate;
+  final DateTime createdDate;
+  final DateTime modifiedDate;
   
 
   Defect({
@@ -19,7 +20,8 @@ class Defect {
     required this.defectTitle,
     required this.defectStatus,
     required this.assignedTo,
-    //required this.createdDate,
+    required this.createdDate,
+    required this.modifiedDate,
   });
 
   factory Defect.fromJson(Map<String, dynamic> json) {
@@ -29,7 +31,8 @@ class Defect {
       defectTitle: json['defectTitle'],
       defectStatus: json['defectStatus'],
       assignedTo: json['assignedTo'],
-      //createdDate: DateTime.parse(json['createdDate']),
+      createdDate: DateTime.parse(json['createdDate']),
+      modifiedDate: DateTime.parse(json['modifiedDate']),
     );
   }
 }

@@ -19,4 +19,6 @@ class Urls {
   static String addReview(String userId) {
     return '$baseUrl/api/reviews/addRev/$userId';
   }
+
+  static const String getAllMyRecReviews = '$baseUrl/api/reviews/received';
 }
