@@ -46,7 +46,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                     backgroundImage: NetworkImage(entry.avatar, scale: 1),
                   ),
                   title: Text(entry.name),
-                  subtitle: Text('Email: ${entry.email}'),
+                  subtitle: Text(entry.email),
                   trailing: Text('Points: ${entry.totalPoints}'),
                 );
               },

@@ -12,4 +12,11 @@ class Urls {
   }
 
   static const String getLeaderBoard = '$baseUrl/api/leaderboard';
+  
+  static const String getAllDefects = '$baseUrl/api/defects/allDefects';
+
+  static const String getAllUsers = '$baseUrl/api/auth/users';
+  static String addReview(String userId) {
+    return '$baseUrl/api/reviews//addRev/$userId';
+  }
 }

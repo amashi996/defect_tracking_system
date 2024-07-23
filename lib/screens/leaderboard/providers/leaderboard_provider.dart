@@ -47,7 +47,7 @@ class LeaderboardProvider with ChangeNotifier {
   List<LeaderBoard> get leaderboard => _leaderboard;
 
   final String apiUrl = Urls.getLeaderBoard;
-
+  
   Future<void> fetchLeaderboard() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString('token');
