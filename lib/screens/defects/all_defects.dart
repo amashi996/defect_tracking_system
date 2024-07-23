@@ -1,5 +1,6 @@
-import 'package:defect_tracking_system/screens/defects/providers/Defect.dart';
+import 'package:defect_tracking_system/screens/defects/providers/defect.dart';
 import 'package:defect_tracking_system/utils/app_scafold.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,9 @@ class _AllDefectsPageState extends State<AllDefectsPage> {
                 const SizedBox(width: 16),
                 IconButton(
                     onPressed: () {
-                      print('filter');
+                      if (kDebugMode) {
+                        print('filter');
+                      }
                     },
                     icon: const Icon(Icons.filter_list)),
                 IconButton(
