@@ -26,7 +26,9 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
       showBackButton: false,
       body: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => debugPrint('Add Review'),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed('/add-review');
+          },
           label: const Text('Add Review'),
           icon: const Icon(Icons.add),
         ),
