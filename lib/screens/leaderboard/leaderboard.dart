@@ -2,7 +2,6 @@ import 'package:defect_tracking_system/screens/leaderboard/providers/leaderboard
 import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:popover/popover.dart';
 
 class LeaderboardPage extends StatefulWidget {
   const LeaderboardPage({super.key});
@@ -28,7 +27,8 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('How Leaderboard Works?'),
-          content: const Text('This is the leaderboard where users are ranked based on their total points which are earned by participating in various activities within the DefectQuest. \n \t If your name is here; Congratulations!! Do more activities, you can go up in the ladder. \n \t Your name is not displaying here?; Dont worry, participate in activities more actively, then you will be recognized in here!'),
+          content: const Text(
+              'This is the leaderboard where users are ranked based on their total points which are earned by participating in various activities within the DefectQuest. \n \t If your name is here; Congratulations!! Do more activities, you can go up in the ladder. \n \t Your name is not displaying here?; Dont worry, participate in activities more actively, then you will be recognized in here!'),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
@@ -41,7 +41,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

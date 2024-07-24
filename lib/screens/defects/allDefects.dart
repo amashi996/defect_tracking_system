@@ -64,8 +64,7 @@ class _DefectsPageState extends State<DefectsPage> {
                     onPressed: () {
                       // Refresh defects
                       setState(() {
-                        _fetchDefectsFuture =
-                            defectsProvider.fetchDefects();
+                        _fetchDefectsFuture = defectsProvider.fetchDefects();
                       });
                     },
                     icon: const Icon(Icons.refresh))
@@ -89,7 +88,8 @@ class _DefectsPageState extends State<DefectsPage> {
                     final sortedDefects = defectsProvider.defects
                         .where((defect) => defect.modifiedDate != null)
                         .toList()
-                        ..sort((a, b) => b.modifiedDate.compareTo(a.modifiedDate));
+                      ..sort(
+                          (a, b) => b.modifiedDate.compareTo(a.modifiedDate));
 
                     return PaginatedDataTable(
                       header: const Text('All Defects'),
@@ -140,11 +140,9 @@ class _DefectsPageState extends State<DefectsPage> {
                           label: const Text('Add Defect'),
                         ),
                       ],
-                      source: DefectDataTableSource(
-                          sortedDefects, context),
-                      rowsPerPage: sortedDefects.length < 10
-                          ? sortedDefects.length
-                          : 10,
+                      source: DefectDataTableSource(sortedDefects, context),
+                      rowsPerPage:
+                          sortedDefects.length < 10 ? sortedDefects.length : 10,
                       onPageChanged: (pageIndex) {
                         setState(() {
                           _currentPage = pageIndex;
@@ -201,4 +199,3 @@ class DefectDataTableSource extends DataTableSource {
   @override
   int get selectedRowCount => 0;
 }
-

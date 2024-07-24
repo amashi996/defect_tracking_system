@@ -1,5 +1,4 @@
 import 'package:defect_tracking_system/screens/defects/providers/defect_provider.dart';
-import 'package:defect_tracking_system/screens/reviews/providers/review_model.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
 import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
@@ -115,8 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return Card(
                                       child: ListTile(
                                         leading: Icon(Icons.person),
-                                        subtitle: Text(review.reviewText ??
-                                            'No Description'),
+                                        subtitle: Text(review.reviewText),
                                       ),
                                     );
                                   }).toList(),
