@@ -1,10 +1,13 @@
 import 'package:defect_tracking_system/screens/auth/login.dart';
+import 'package:defect_tracking_system/screens/auth/providers/user_provider.dart';
 import 'package:defect_tracking_system/screens/home.dart';
 import 'package:defect_tracking_system/screens/leaderboard/leaderboard.dart';
 import 'package:defect_tracking_system/screens/leaderboard/providers/leaderboard_provider.dart';
 import 'package:defect_tracking_system/screens/defects/providers/defect_provider.dart';
 import 'package:defect_tracking_system/screens/defects/allDefects.dart';
 import 'package:defect_tracking_system/screens/profile/my_profile.dart';
+import 'package:defect_tracking_system/screens/reviews/add_review.dart';
+import 'package:defect_tracking_system/screens/reviews/providers/review_dropdown_user_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/reviews_page.dart';
 import 'package:defect_tracking_system/screens/splash.dart';
@@ -20,7 +23,9 @@ void main() {
     ChangeNotifierProvider(create: (_) => ReviewProvider()),
     ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
     ChangeNotifierProvider(create: (_) => DefectsProvider()),
-   // ChangeNotifierProvider(create: (_) => UserProvider())
+    // ChangeNotifierProvider(create: (_) => UserProvider())
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => UserDropdownProvider())
   ], child: const DefectTrackingApp()));
 }
 
@@ -38,11 +43,10 @@ class DefectTrackingApp extends StatelessWidget {
         '/home': (_) => const HomeScreen(),
         '/reviews': (_) => const ReviewListScreen(),
         '/all-defects': (_) => const DefectsPage(),
-        '/reviews': (_) => const ReviewListScreen(),
-        '/all-defects': (_) => const DefectsPage(),
         '/leaderboard': (_) => const LeaderboardPage(),
         '/profile': (_) => const UserProfilePage(),
-        '/splash': (_) => const SplashPage()
+        '/splash': (_) => const SplashPage(),
+        '/add-review': (_) => const InsertReviewScreen()
       },
       theme: ThemeData(
         listTileTheme: ListTileThemeData(

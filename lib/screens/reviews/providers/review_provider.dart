@@ -51,7 +51,8 @@ class ReviewProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       List<dynamic> reviewList = jsonDecode(response.body);
-      _receivedReviews = reviewList.map((json) => Review.fromJson(json)).toList();
+      _receivedReviews =
+          reviewList.map((json) => Review.fromJson(json)).toList();
       notifyListeners();
     } else {
       throw Exception('Failed to load received reviews');
@@ -98,10 +99,13 @@ class ReviewProvider with ChangeNotifier {
   }
 
   Future<void> addReview(Review review) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString('token');
     final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
+      Uri.parse(Urls.addReview + review.user),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': token!
       },
       body: jsonEncode(review.toJson()),
     );
@@ -145,5 +149,3 @@ class ReviewProvider with ChangeNotifier {
     }
   }
 }
-
-

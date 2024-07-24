@@ -139,6 +139,9 @@ class UserProvider with ChangeNotifier {
     badges: [],
   );
   User? get user => _user;
+  List<User> _users = [];
+
+  List<User> get users => _users;
 
   Future<void> fetchUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -196,6 +199,25 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     } else {
       throw Exception('Failed to create user');
+    }
+  }
+
+  Future<void> fetchUsers() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString('token');
+    final response = await http.get(
+      Uri.parse(Urls.getAllUsers),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': token!
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> userList = jsonDecode(response.body);
+      _users = userList.map((json) => User.fromJson(json)).toList();
+      notifyListeners();
+    } else {
+      throw Exception('Failed to load users');
     }
   }
 }

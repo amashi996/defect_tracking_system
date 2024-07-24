@@ -19,8 +19,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchDefectsFuture = Provider.of<DefectsProvider>(context, listen: false).fetchDefects();
-    _fetchReviewsFuture = Provider.of<ReviewProvider>(context, listen: false).fetchReceivedReviews();
+    _fetchDefectsFuture =
+        Provider.of<DefectsProvider>(context, listen: false).fetchDefects();
+    _fetchReviewsFuture = Provider.of<ReviewProvider>(context, listen: false)
+        .fetchReceivedReviews();
   }
 
   @override
@@ -55,9 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Icon(Icons.star, size: 40.0, color: Colors.amber),
-                            Icon(Icons.verified, size: 40.0, color: Colors.blue),
-                            Icon(Icons.check_circle, size: 40.0, color: Colors.green),
-                            Icon(Icons.shield, size: 40.0, color: Colors.orange),
+                            Icon(Icons.verified,
+                                size: 40.0, color: Colors.blue),
+                            Icon(Icons.check_circle,
+                                size: 40.0, color: Colors.green),
+                            Icon(Icons.shield,
+                                size: 40.0, color: Colors.orange),
                           ],
                         ),
                         const SizedBox(height: 10.0),
@@ -89,22 +94,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         FutureBuilder(
                           future: _fetchReviewsFuture,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else {
                               if (reviewProvider.receivedReviews.isEmpty) {
-                                return const Center(child: Text('No reviews received.'));
+                                return const Center(
+                                    child: Text('No reviews received.'));
                               } else {
-                                final reviews = reviewProvider.receivedReviews.take(2).toList();
+                                final reviews = reviewProvider.receivedReviews
+                                    .take(2)
+                                    .toList();
 
                                 return Column(
                                   children: reviews.map((review) {
                                     return Card(
                                       child: ListTile(
                                         leading: Icon(Icons.person),
-                                        subtitle: Text(review.reviewText ?? 'No Description'),
+                                        subtitle: Text(review.reviewText ??
+                                            'No Description'),
                                       ),
                                     );
                                   }).toList(),
@@ -157,8 +169,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         final recentDefects = defectsProvider.defects
                             .where((defect) => defect.modifiedDate != null)
                             .toList()
-                            ..sort((a, b) => b.modifiedDate.compareTo(a.modifiedDate));
-                        final latestFiveDefects = recentDefects.take(5).toList();
+                          ..sort((a, b) =>
+                              b.modifiedDate.compareTo(a.modifiedDate));
+                        final latestFiveDefects =
+                            recentDefects.take(5).toList();
 
                         return DataTable(
                           columns: const [
@@ -192,7 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushReplacementNamed('/all-defects');
+                        Navigator.of(context)
+                            .pushReplacementNamed('/all-defects');
                       },
                       child: const Text('View More'),
                     ),
