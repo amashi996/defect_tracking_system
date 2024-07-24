@@ -21,4 +21,6 @@ class Urls {
   }
 
   static const String getAllMyRecReviews = '$baseUrl/api/reviews/received';
+  static const String getAllMySentReviews = '$baseUrl/api/reviews/added';
+  
 }

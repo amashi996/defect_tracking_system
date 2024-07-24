@@ -1,5 +1,7 @@
 import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -16,6 +18,12 @@ class _UserProfilePageState extends State<UserProfilePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    // Fetch reviews when the profile page is loaded
+    Future.microtask(() {
+      Provider.of<ReviewProvider>(context, listen: false).fetchReceivedReviews();
+      Provider.of<ReviewProvider>(context, listen: false).fetchSentReviews();
+    });
   }
 
   @override
@@ -77,23 +85,172 @@ class MyProfileTab extends StatelessWidget {
   }
 }
 
-class MyReviewsTab extends StatelessWidget {
+class MyReviewsTab extends StatefulWidget {
   const MyReviewsTab({super.key});
 
   @override
+  _MyReviewsTabState createState() => _MyReviewsTabState();
+}
+
+class _MyReviewsTabState extends State<MyReviewsTab> {
+  int receivedPage = 1;
+  int sentPage = 1;
+
+  bool receivedExpanded = true;
+  bool sentExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ListView(
-        children: List.generate(
-          10,
-          (index) => ListTile(
-            leading: const Icon(Icons.person),
-            title: Text('Reviewer ${index + 1}'),
-            subtitle: Text('This is a review from user ${index + 1}.'),
+    final receivedReviews = context.watch<ReviewProvider>().receivedReviews;
+    final sentReviews = context.watch<ReviewProvider>().sentReviews;
+
+    return ListView(
+      children: [
+        ExpansionTile(
+          leading: Icon(Icons.reviews, color: receivedExpanded ? Colors.blue : Colors.black),
+          title: Text(
+            'Received Reviews',
+            style: TextStyle(color: receivedExpanded ? Colors.blue : Colors.black),
+          ),
+          initiallyExpanded: receivedExpanded,
+          onExpansionChanged: (expanded) {
+            setState(() {
+              receivedExpanded = expanded;
+            });
+          },
+          children: [
+            if (receivedReviews.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Sorry, you did not receive any reviews from other users yet.',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              )
+            else
+              PaginatedReviews(
+                reviews: receivedReviews.map((review) => ReviewItem(
+                  reviewerName: review.reviewerName,
+                  reviewerEmail: review.reviewerEmail,
+                  reviewerAvatar: review.reviewerAvatar,
+                  reviewText: review.reviewText,
+                )).toList(),
+                currentPage: receivedPage,
+                onPageChanged: (page) {
+                  setState(() {
+                    receivedPage = page;
+                  });
+                },
+              ),
+          ],
+        ),
+        ExpansionTile(
+          leading: Icon(Icons.send, color: sentExpanded ? Colors.blue : Colors.black),
+          title: Text(
+            'Sent Reviews',
+            style: TextStyle(color: sentExpanded ? Colors.blue : Colors.black),
+          ),
+          initiallyExpanded: sentExpanded,
+          onExpansionChanged: (expanded) {
+            setState(() {
+              sentExpanded = expanded;
+            });
+          },
+          children: [
+            if (sentReviews.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Oops, you did not send any reviews for any user yet.',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              )
+            else
+              PaginatedReviews(
+                reviews: sentReviews.map((review) => ReviewItem(
+                  reviewerName: review.reviewerName,
+                  reviewerEmail: review.reviewerEmail,
+                  reviewerAvatar: review.reviewerAvatar,
+                  reviewText: review.reviewText,
+                )).toList(),
+                currentPage: sentPage,
+                onPageChanged: (page) {
+                  setState(() {
+                    sentPage = page;
+                  });
+                },
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class PaginatedReviews extends StatelessWidget {
+  final List<ReviewItem> reviews;
+  final int currentPage;
+  final Function(int) onPageChanged;
+
+  const PaginatedReviews({
+    super.key,
+    required this.reviews,
+    required this.currentPage,
+    required this.onPageChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const int reviewsPerPage = 5;
+    int totalPages = (reviews.length / reviewsPerPage).ceil();
+    int startIndex = (currentPage - 1) * reviewsPerPage;
+    int endIndex = (startIndex + reviewsPerPage).clamp(0, reviews.length);
+
+    List<ReviewItem> currentReviews = reviews.sublist(startIndex, endIndex);
+
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: currentReviews.length,
+          itemBuilder: (context, index) {
+            final review = currentReviews[index];
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(review.reviewerAvatar),
+              ),
+              title: Text('${review.reviewerName} (${review.reviewerEmail})'),
+              subtitle: Text(review.reviewText),
+            );
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(totalPages, (index) {
+              return GestureDetector(
+                onTap: () {
+                  onPageChanged(index + 1);
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: currentPage == index + 1 ? Colors.blue : Colors.grey,
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Text(
+                    (index + 1).toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            }),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -144,11 +301,12 @@ class BadgeWidget extends StatelessWidget {
   final String badgeName;
   final String badgeDescription;
 
-  const BadgeWidget(
-      {super.key,
-      required this.icon,
-      required this.badgeName,
-      required this.badgeDescription});
+  const BadgeWidget({
+    super.key,
+    required this.icon,
+    required this.badgeName,
+    required this.badgeDescription,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,3 +321,19 @@ class BadgeWidget extends StatelessWidget {
     );
   }
 }
+
+class ReviewItem {
+  final String reviewerName;
+  final String reviewerEmail;
+  final String reviewerAvatar;
+  final String reviewText;
+
+  ReviewItem({
+    required this.reviewerName,
+    required this.reviewerEmail,
+    required this.reviewerAvatar,
+    required this.reviewText,
+  });
+}
+
+

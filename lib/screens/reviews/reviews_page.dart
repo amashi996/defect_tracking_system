@@ -41,7 +41,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                 Review review = reviewProvider.reviews[index];
                 return ListTile(
                   leading: const Icon(Icons.account_circle),
-                  title: Text(review.name),
+                  title: Text(review.reviewerName),
                   subtitle: Text(review.reviewText),
                   trailing: Text(
                     '${review.likes.length} likes',

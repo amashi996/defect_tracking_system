@@ -38,8 +38,9 @@ class Review {
   final String id;
   final String user;
   final String reviewText;
-  final String name;
-  final String avatar;
+  final String reviewerName;
+  final String reviewerEmail;
+  final String reviewerAvatar;
   final DateTime reviewDate;
   final List<String> likes;
   final List<ReviewComment> reviewComments;
@@ -48,8 +49,9 @@ class Review {
     required this.id,
     required this.user,
     required this.reviewText,
-    required this.name,
-    required this.avatar,
+    required this.reviewerName,
+    required this.reviewerEmail,
+    required this.reviewerAvatar,
     required this.reviewDate,
     required this.likes,
     required this.reviewComments,
@@ -57,22 +59,21 @@ class Review {
 
   factory Review.fromJson(Map<String, dynamic> json) {
     var likesFromJson = json['likes'] as List;
-    List<String> likesList =
-        likesFromJson.map((i) => i['user'] as String).toList();
+    List<String> likesList = likesFromJson.map((i) => i['user'] as String).toList();
 
     var commentsFromJson = json['reviewComments'] as List;
-    List<ReviewComment> commentsList =
-        commentsFromJson.map((i) => ReviewComment.fromJson(i)).toList();
+    List<ReviewComment> commentsList = commentsFromJson.map((i) => ReviewComment.fromJson(i)).toList();
 
     return Review(
+      id: json['_id'],
       user: json['user'],
       reviewText: json['reviewText'],
-      name: json['name'] ?? '',
-      avatar: json['avatar'] ?? '',
+      reviewerName: json['reviewerName'] ?? '',
+      reviewerEmail: json['reviewerEmail'] ?? '',
+      reviewerAvatar: json['reviewerAvatar'] ?? '',
       reviewDate: DateTime.parse(json['reviewDate']),
       likes: likesList,
       reviewComments: commentsList,
-      id: json['_id'],
     );
   }
 
@@ -81,11 +82,13 @@ class Review {
       '_id': id,
       'user': user,
       'reviewText': reviewText,
-      'name': name,
-      'avatar': avatar,
+      'reviewerName': reviewerName,
+      'reviewerEmail': reviewerEmail,
+      'reviewerAvatar': reviewerAvatar,
       'reviewDate': reviewDate.toIso8601String(),
       'likes': likes.map((i) => {'user': i}).toList(),
       'reviewComments': reviewComments.map((i) => i.toJson()).toList(),
     };
   }
 }
+

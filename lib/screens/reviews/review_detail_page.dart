@@ -35,7 +35,7 @@ class ReviewDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        review.name,
+                        review.reviewerName,
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
