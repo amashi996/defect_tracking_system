@@ -21,7 +21,8 @@ class _UserProfilePageState extends State<UserProfilePage>
 
     // Fetch reviews when the profile page is loaded
     Future.microtask(() {
-      Provider.of<ReviewProvider>(context, listen: false).fetchReceivedReviews();
+      Provider.of<ReviewProvider>(context, listen: false)
+          .fetchReceivedReviews();
       Provider.of<ReviewProvider>(context, listen: false).fetchSentReviews();
     });
   }
@@ -107,10 +108,12 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
     return ListView(
       children: [
         ExpansionTile(
-          leading: Icon(Icons.reviews, color: receivedExpanded ? Colors.blue : Colors.black),
+          leading: Icon(Icons.reviews,
+              color: receivedExpanded ? Colors.blue : Colors.black),
           title: Text(
             'Received Reviews',
-            style: TextStyle(color: receivedExpanded ? Colors.blue : Colors.black),
+            style:
+                TextStyle(color: receivedExpanded ? Colors.blue : Colors.black),
           ),
           initiallyExpanded: receivedExpanded,
           onExpansionChanged: (expanded) {
@@ -120,8 +123,8 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
           },
           children: [
             if (receivedReviews.isEmpty)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'Sorry, you did not receive any reviews from other users yet.',
                   style: TextStyle(color: Colors.grey),
@@ -129,12 +132,14 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
               )
             else
               PaginatedReviews(
-                reviews: receivedReviews.map((review) => ReviewItem(
-                  reviewerName: review.reviewerName,
-                  reviewerEmail: review.reviewerEmail,
-                  reviewerAvatar: review.reviewerAvatar,
-                  reviewText: review.reviewText,
-                )).toList(),
+                reviews: receivedReviews
+                    .map((review) => ReviewItem(
+                          reviewerName: review.reviewerName,
+                          reviewerEmail: review.reviewerEmail,
+                          reviewerAvatar: review.reviewerAvatar,
+                          reviewText: review.reviewText,
+                        ))
+                    .toList(),
                 currentPage: receivedPage,
                 onPageChanged: (page) {
                   setState(() {
@@ -145,7 +150,8 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
           ],
         ),
         ExpansionTile(
-          leading: Icon(Icons.send, color: sentExpanded ? Colors.blue : Colors.black),
+          leading: Icon(Icons.send,
+              color: sentExpanded ? Colors.blue : Colors.black),
           title: Text(
             'Sent Reviews',
             style: TextStyle(color: sentExpanded ? Colors.blue : Colors.black),
@@ -158,8 +164,8 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
           },
           children: [
             if (sentReviews.isEmpty)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'Oops, you did not send any reviews for any user yet.',
                   style: TextStyle(color: Colors.grey),
@@ -167,12 +173,14 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
               )
             else
               PaginatedReviews(
-                reviews: sentReviews.map((review) => ReviewItem(
-                  reviewerName: review.reviewerName,
-                  reviewerEmail: review.reviewerEmail,
-                  reviewerAvatar: review.reviewerAvatar,
-                  reviewText: review.reviewText,
-                )).toList(),
+                reviews: sentReviews
+                    .map((review) => ReviewItem(
+                          reviewerName: review.reviewerName,
+                          reviewerEmail: review.reviewerEmail,
+                          reviewerAvatar: review.reviewerAvatar,
+                          reviewText: review.reviewText,
+                        ))
+                    .toList(),
                 currentPage: sentPage,
                 onPageChanged: (page) {
                   setState(() {
@@ -335,5 +343,3 @@ class ReviewItem {
     required this.reviewText,
   });
 }
-
-

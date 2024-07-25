@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: reviews.map((review) {
                                     return Card(
                                       child: ListTile(
-                                        leading: Icon(Icons.person),
+                                        leading: const Icon(Icons.person),
                                         subtitle: Text(review.reviewText),
                                       ),
                                     );

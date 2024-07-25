@@ -1,5 +1,6 @@
 import 'package:defect_tracking_system/screens/reviews/providers/review_dropdown_user_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_model.dart';
+import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
@@ -16,8 +17,7 @@ class _InsertReviewScreenState extends State<InsertReviewScreen> {
   String? _selectedUser;
   String _reviewText = '';
   String _name = '';
-  final String _avatar =
-      ''; // Assume you have a way to get the current user's avatar
+  final String _avatar = '';
   final DateTime _reviewDate = DateTime.now();
 
   @override
@@ -28,10 +28,9 @@ class _InsertReviewScreenState extends State<InsertReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Insert Review'),
-      ),
+    return AppScaffold(
+      pageTitle: const Text('Insert Review'),
+      showBackButton: true,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -54,7 +53,6 @@ class _InsertReviewScreenState extends State<InsertReviewScreen> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        print(_selectedUser);
                         _selectedUser = value;
                       });
                     },
@@ -113,8 +111,8 @@ class _InsertReviewScreenState extends State<InsertReviewScreen> {
                         reviewerAvatar: '',
                       ),
                     );
-                    Navigator.pop(context);
                   }
+                  Navigator.of(context).pushReplacementNamed('/reviews');
                 },
                 child: const Text('Submit'),
               ),
