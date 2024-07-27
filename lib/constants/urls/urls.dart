@@ -1,6 +1,6 @@
 class Urls {
   //static const String baseUrl = 'https://wioms-backend.onrender.com';
-  static const String baseUrl = 'http://localhost:5001';
+  static const String baseUrl = 'http://localhost:5002';
   static const String getAllProducts = '$baseUrl/api/products/get/all';
 
   static const String loginUser = '$baseUrl/api/auth';
@@ -18,4 +18,10 @@ class Urls {
   static const String getAllMyRecReviews = '$baseUrl/api/reviews/received';
   static const String getAllMySentReviews = '$baseUrl/api/reviews/added';
   static const String getAllDefects = '$baseUrl/api/defects/allDefects';
+
+   static const String getAllAchievements = '$baseUrl/api/achievements';
+  static const String getAllBadges = '$baseUrl/api/badges';
+
+  static const String getLoggedUserAchievements = '$baseUrl/api/auth/achievements';
+  static const String getLoggedUserBadges = '$baseUrl/api/auth/badges';
 }

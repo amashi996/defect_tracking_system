@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison, avoid_print, file_names
+
 import 'package:defect_tracking_system/screens/defects/providers/defect_provider.dart';
 import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';

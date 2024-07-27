@@ -4,12 +4,16 @@ import 'package:defect_tracking_system/screens/home.dart';
 import 'package:defect_tracking_system/screens/leaderboard/leaderboard.dart';
 import 'package:defect_tracking_system/screens/leaderboard/providers/leaderboard_provider.dart';
 import 'package:defect_tracking_system/screens/defects/providers/defect_provider.dart';
-import 'package:defect_tracking_system/screens/defects/allDefects.dart';
+import 'package:defect_tracking_system/screens/defects/all_defects.dart';
 import 'package:defect_tracking_system/screens/profile/my_profile.dart';
 import 'package:defect_tracking_system/screens/reviews/add_review.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_dropdown_user_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/reviews_page.dart';
+import 'package:defect_tracking_system/screens/profile/providers/achievement_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/badge_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/user_achievement_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/user_badge_provider.dart';
 import 'package:defect_tracking_system/screens/splash.dart';
 import 'package:defect_tracking_system/utils/app_route_observer.dart';
 import 'package:defect_tracking_system/utils/navigation_provider.dart';
@@ -25,7 +29,11 @@ void main() {
     ChangeNotifierProvider(create: (_) => DefectsProvider()),
     // ChangeNotifierProvider(create: (_) => UserProvider())
     ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => UserDropdownProvider())
+    ChangeNotifierProvider(create: (_) => UserDropdownProvider()),
+     ChangeNotifierProvider(create: (_) => AchievementProvider()),
+     ChangeNotifierProvider(create: (_) => BadgeProvider()),
+     ChangeNotifierProvider(create: (_) => UserAchievementProvider()),
+     ChangeNotifierProvider(create: (_) => UserBadgeProvider()),
   ], child: const DefectTrackingApp()));
 }
 

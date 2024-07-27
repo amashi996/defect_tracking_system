@@ -2,6 +2,10 @@ import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/achievement_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/badge_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/user_achievement_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/user_badge_provider.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -268,35 +272,50 @@ class MyBadgesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
+    return DefaultTabController(
+      length: 2, // Number of sub-tabs
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Currently Earned Badges',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Container(
+            color: Colors.white, // Background color for the TabBar
+            child: const TabBar(
+              tabs: [
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.emoji_events, color: Colors.amber), // Icon for Achievements
+                      SizedBox(width: 8.0),
+                      Text('My Achievements'),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.star, color: Colors.blue), // Icon for Badges
+                      SizedBox(width: 8.0),
+                      Text('My Badges'),
+                    ],
+                  ),
+                ),
+              ],
+              labelStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold), // Same style as main titles
+              indicatorColor: Colors.blue,
+            ),
           ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              BadgeWidget(
-                icon: Icons.star,
-                badgeName: 'Badge Name 1',
-                badgeDescription: 'Badge Description 1',
-              ),
-              BadgeWidget(
-                icon: Icons.check_circle,
-                badgeName: 'Badge Name 2',
-                badgeDescription: 'Badge Description 2',
-              ),
-              BadgeWidget(
-                icon: Icons.speed,
-                badgeName: 'Badge Name 3',
-                badgeDescription: 'Badge Description 3',
-              ),
-            ],
+          const Expanded(
+            child: TabBarView(
+              children: [
+                // Content for My Achievements
+                MyAchievementsContent(),
+                // Content for My Badges
+                MyBadgesContent(),
+              ],
+            ),
           ),
         ],
       ),
@@ -304,28 +323,367 @@ class MyBadgesTab extends StatelessWidget {
   }
 }
 
-class BadgeWidget extends StatelessWidget {
-  final IconData icon;
-  final String badgeName;
-  final String badgeDescription;
-
-  const BadgeWidget({
-    super.key,
-    required this.icon,
-    required this.badgeName,
-    required this.badgeDescription,
-  });
+class MyAchievementsContent extends StatelessWidget {
+  const MyAchievementsContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, size: 50, color: Colors.blue),
-        const SizedBox(height: 8),
-        Text(badgeName, style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 4),
-        Text(badgeDescription, style: const TextStyle(fontSize: 12)),
-      ],
+    return FutureBuilder(
+      future: Future.wait([
+        Provider.of<AchievementProvider>(context, listen: false).fetchAchievements(),
+        Provider.of<UserAchievementProvider>(context, listen: false).fetchUserAchievements(),
+      ]),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    Consumer<UserAchievementProvider>(
+                      builder: (ctx, userAchievementProvider, _) {
+                        final earnedAchievements = userAchievementProvider.userAchievements;
+                        return ExpansionTile(
+                          leading: const Icon(Icons.star, color: Colors.amber),
+                          title: const Text(
+                            'Earned Achievements',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          initiallyExpanded: true,
+                          children: earnedAchievements.isEmpty
+                              ? [
+                                  const Center(child: Text('No achievements earned yet.'))
+                                ]
+                              : [
+                                  GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 5,
+                                      crossAxisSpacing: 8.0,
+                                      mainAxisSpacing: 8.0,
+                                    ),
+                                    itemCount: earnedAchievements.length,
+                                    itemBuilder: (ctx, index) {
+                                      final achievement = earnedAchievements[index];
+                                      return Card(
+                                        elevation: 4.0,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              const Icon(
+                                                Icons.emoji_events,
+                                                color: Colors.amber,
+                                                size: 32.0,
+                                              ),
+                                              const SizedBox(height: 8.0),
+                                              Text(
+                                                achievement.name,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold, fontSize: 14.0),
+                                              ),
+                                              const SizedBox(height: 4.0),
+                                              Text(
+                                                achievement.description,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(fontSize: 12.0),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(height: 12.0),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.green,
+                                                  foregroundColor: Colors.black,
+                                                  elevation: 0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                  ),
+                                                ),
+                                                onPressed: (){},
+                                                child: const Text('Achievement Earned'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                ],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16.0,),
+                    Consumer<AchievementProvider>(
+                      builder: (ctx, achievementProvider, _) {
+                        final achievements = achievementProvider.achievements;
+                        return ExpansionTile(
+                          leading: const Icon(Icons.star_border, color: Colors.grey),
+                          title: const Text(
+                            'Pending Achievements',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          children: [
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 5,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 8.0,
+                              ),
+                              itemCount: achievements.length,
+                              itemBuilder: (ctx, index) {
+                                final achievement = achievements[index];
+                                return Card(
+                                  elevation: 4.0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.emoji_events,
+                                          color: Colors.amber,
+                                          size: 32.0,
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        Text(
+                                          achievement.name,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        Text(
+                                          achievement.description,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 12.0),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 12.0),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.grey,
+                                            foregroundColor: Colors.black,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                          onPressed: null,
+                                          child: const Text('Pending Achievement'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+}
+
+class MyBadgesContent extends StatelessWidget {
+  const MyBadgesContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Future.wait([
+        Provider.of<UserBadgeProvider>(context, listen: false).fetchBadges(),
+        Provider.of<BadgeProvider>(context, listen: false).fetchBadges(),
+      ]),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    Consumer<UserBadgeProvider>(
+                      builder: (ctx, userBadgeProvider, _) {
+                        final earnedBadges = userBadgeProvider.userBadges;
+                        return ExpansionTile(
+                          leading: const Icon(Icons.card_giftcard, color: Colors.blue),
+                          title: const Text(
+                            'Earned Badges',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          initiallyExpanded: true,
+                          children: earnedBadges.isEmpty
+                              ? [
+                                  const Center(child: Text('No badges earned yet.'))
+                                ]
+                              : [
+                                  GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 5,
+                                      crossAxisSpacing: 8.0,
+                                      mainAxisSpacing: 8.0,
+                                    ),
+                                    itemCount: earnedBadges.length,
+                                    itemBuilder: (ctx, index) {
+                                      final badge = earnedBadges[index];
+                                      return Card(
+                                        elevation: 4.0,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 40.0,
+                                                backgroundImage: badge.icon.isNotEmpty
+                                                    ? NetworkImage(badge.icon)
+                                                    : const AssetImage('assets/placeholder.png')
+                                                        as ImageProvider,
+                                              ),
+                                              const SizedBox(height: 8.0),
+                                              Text(
+                                                badge.name,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold, fontSize: 14.0),
+                                              ),
+                                              const SizedBox(height: 4.0),
+                                              Text(
+                                                badge.description,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(fontSize: 12.0),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                               const SizedBox(height: 12.0),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.green,
+                                                  foregroundColor: Colors.black,
+                                                  elevation: 0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                  ),
+                                                ),
+                                                onPressed: (){},
+                                                child: const Text('Badge Earned'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                ],
+                        );
+                      },
+                    ),
+                    Consumer<BadgeProvider>(
+                      builder: (ctx, badgeProvider, _) {
+                        final badges = badgeProvider.badges;
+                        return ExpansionTile(
+                          leading: const Icon(Icons.card_giftcard_outlined, color: Colors.grey),
+                          title: const Text(
+                            'Pending Badges',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          children: [
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 5,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 8.0,
+                              ),
+                              itemCount: badges.length,
+                              itemBuilder: (ctx, index) {
+                                final badge = badges[index];
+                                return Card(
+                                  elevation: 4.0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 40.0,
+                                          backgroundImage: badge.icon.isNotEmpty
+                                              ? NetworkImage(badge.icon)
+                                              : const AssetImage('assets/placeholder.png')
+                                                  as ImageProvider,
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        Text(
+                                          badge.name,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        Text(
+                                          badge.description,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 12.0),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 12.0),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.grey,
+                                            foregroundColor: Colors.black,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                          onPressed: null,
+                                          child: const Text('Pending Badge'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
