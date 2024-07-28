@@ -6,6 +6,8 @@ import 'package:defect_tracking_system/screens/profile/providers/achievement_pro
 import 'package:defect_tracking_system/screens/profile/providers/badge_provider.dart';
 import 'package:defect_tracking_system/screens/profile/providers/user_achievement_provider.dart';
 import 'package:defect_tracking_system/screens/profile/providers/user_badge_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/logged_user_provider.dart';
+import 'package:defect_tracking_system/screens/profile/models/logged_user_model.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -72,20 +74,284 @@ class MyProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name: John Doe', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 8),
-            Text('Email: johndoe@example.com', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 8),
-            Text('Member Since: January 2020', style: TextStyle(fontSize: 18)),
-          ],
-        ),
+    return FutureBuilder(
+      future: Provider.of<ProfileProvider>(context, listen: false).fetchLoggedUserProfile(),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Consumer<ProfileProvider>(
+            builder: (context, profileProvider, _) {
+              Profile? profile = profileProvider.profile;
+
+              if (profile == null) {
+                return const Center(child: Text('Profile data not available.'));
+              }
+
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildBasicInformationSection(context, profile),
+                      _buildEducationSection(context, profile),
+                      _buildExperienceSection(context, profile),
+                      _buildSkillsSection(context, profile),
+                      _buildSocialLinksSection(context, profile),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildSection(BuildContext context, {required String title, required Widget content, bool initiallyExpanded = false}) {
+    return ExpansionTile(
+      initiallyExpanded: initiallyExpanded,
+      title: Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      children: [content],
+    );
+  }
+
+  Widget _buildBasicInformationSection(BuildContext context, Profile profile) {
+    return _buildSection(
+      context,
+      title: 'Basic Information',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(child: _buildField('Name', profile.name)),
+              const SizedBox(width: 16),
+              Expanded(child: _buildField('GitHub Username', profile.githubUsername)), // Added GitHub Username field
+              
+            ],
+          ),
+          const SizedBox(height: 16), // Added space below the content
+          Row(
+            children: [
+              Expanded(child: _buildField('Location', profile.location ?? 'N/A')),
+              const SizedBox(width: 16),
+              Expanded(child: _buildField('Website', profile.website)), // Added Website field
+            ],
+          ),
+          const SizedBox(height: 16), // Added space below the content
+          Row(
+            children: [
+              Expanded(child: _buildField('Member Since', profile.date?.toLocal().toString().split(' ')[0])), // Added Location field
+              Expanded(child: Container()), // Empty Expanded to keep alignment consistent
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
       ),
+    );
+  }
+
+
+  Widget _buildExperienceSection(BuildContext context, Profile profile) {
+    return _buildSection(
+      context,
+      title: 'Experience',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: profile.experience!.map((exp) {
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: _buildField('Title', exp.title)),
+                      Expanded(child: Container()), // Empty Expanded to keep alignment consistent
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(child: _buildField('Company', exp.company)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildField('Location', exp.location)),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(child: _buildField('From', exp.from?.toLocal().toString().split(' ')[0] ?? '')),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildField('To', exp.to?.toLocal().toString().split(' ')[0] ?? 'Present')),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildEducationSection(BuildContext context, Profile profile) {
+    return _buildSection(
+      context,
+      title: 'Education',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: profile.education!.map((edu) {
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: _buildField('School', edu.school)),
+                      Expanded(child: Container()), // Empty Expanded to keep alignment consistent
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(child: _buildField('Degree', edu.degree)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildField('Field of Study', edu.fieldOfStudy)),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(child: _buildField('From', edu.from?.toLocal().toString().split(' ')[0] ?? '')),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildField('To', edu.to?.toLocal().toString().split(' ')[0] ?? 'Present')),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildField(String label, String? value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)), // Reduced font size for labels
+        const SizedBox(height: 8),
+        TextFormField(
+          initialValue: value,
+          readOnly: true,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSkillsSection(BuildContext context, Profile profile) {
+    String skillsText = profile.skills!.join(', ');
+
+    return _buildSection(
+      context,
+      title: 'Skills',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Skills TextFormField with bottom padding
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: TextFormField(
+              initialValue: _formatSkillsText(skillsText),
+              readOnly: true,
+              maxLines: null,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatSkillsText(String skillsText) {
+    List<String> skills = skillsText.split(', ');
+    List<String> rows = [];
+    int i = 0;
+
+    while (i < skills.length) {
+      String rowText = skills.skip(i).take(10).join(', ');
+      rows.add(rowText);
+      i += 10;
+    }
+
+    return rows.join('\n');
+  }
+
+  Widget _buildSocialLinksSection(BuildContext context, Profile profile) {
+    return _buildSection(
+      context,
+      title: 'Social Links',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _buildSocialLinkField('LinkedIn', profile.social?.linkedin ?? 'N/A'),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildSocialLinkField('Twitter', profile.social?.twitter ?? 'N/A'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSocialLinkField('YouTube', profile.social?.youtube ?? 'N/A'),
+              ),
+              Expanded(
+                child: Container(), // Empty Expanded to keep alignment consistent
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSocialLinkField(String label, String url) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)), // Reduced font size for labels
+        const SizedBox(height: 8),
+        TextFormField(
+          initialValue: url,
+          readOnly: true,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ],
     );
   }
 }

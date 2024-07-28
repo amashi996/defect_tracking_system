@@ -14,6 +14,7 @@ import 'package:defect_tracking_system/screens/profile/providers/achievement_pro
 import 'package:defect_tracking_system/screens/profile/providers/badge_provider.dart';
 import 'package:defect_tracking_system/screens/profile/providers/user_achievement_provider.dart';
 import 'package:defect_tracking_system/screens/profile/providers/user_badge_provider.dart';
+import 'package:defect_tracking_system/screens/profile/providers/logged_user_provider.dart';
 import 'package:defect_tracking_system/screens/splash.dart';
 import 'package:defect_tracking_system/utils/app_route_observer.dart';
 import 'package:defect_tracking_system/utils/navigation_provider.dart';
@@ -30,10 +31,11 @@ void main() {
     // ChangeNotifierProvider(create: (_) => UserProvider())
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => UserDropdownProvider()),
-     ChangeNotifierProvider(create: (_) => AchievementProvider()),
-     ChangeNotifierProvider(create: (_) => BadgeProvider()),
-     ChangeNotifierProvider(create: (_) => UserAchievementProvider()),
-     ChangeNotifierProvider(create: (_) => UserBadgeProvider()),
+    ChangeNotifierProvider(create: (_) => AchievementProvider()),
+    ChangeNotifierProvider(create: (_) => BadgeProvider()),
+    ChangeNotifierProvider(create: (_) => UserAchievementProvider()),
+    ChangeNotifierProvider(create: (_) => UserBadgeProvider()),
+    ChangeNotifierProvider(create: (_) => ProfileProvider()),
   ], child: const DefectTrackingApp()));
 }
 
