@@ -1,7 +1,6 @@
 import 'package:defect_tracking_system/screens/defects/providers/defect_detail_provider.dart';
 import 'package:defect_tracking_system/utils/app_scafold.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class DefectFormScreen extends StatefulWidget {
@@ -47,10 +46,10 @@ class _DefectFormScreenState extends State<DefectFormScreen> {
 
           return Consumer<DefectDetailProvider>(
             builder: (context, value, child) {
-              print(value.defect.defectTitle.toString());
+              DefectDetail? defectDetail = value.defect;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: (viewDefectDetailForm(value.defect, context)),
+                child: (viewDefectDetailForm(defectDetail!, context)),
               );
             },
           );
@@ -59,10 +58,10 @@ class _DefectFormScreenState extends State<DefectFormScreen> {
 }
 
 Widget viewDefectDetailForm(DefectDetail defect, BuildContext context) {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   final defectProvider = Provider.of<DefectDetailProvider>(context);
   return Form(
-    key: _formKey,
+    key: formKey,
     child: SingleChildScrollView(
       child: Column(
         children: [
@@ -165,8 +164,8 @@ Widget viewDefectDetailForm(DefectDetail defect, BuildContext context) {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
+              if (formKey.currentState!.validate()) {
+                formKey.currentState!.save();
                 defectProvider.updateDefect(defect);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Defect Updated')),
@@ -202,7 +201,7 @@ Widget viewDefectDetailForm(DefectDetail defect, BuildContext context) {
               title: Text(attachment.fileName),
               subtitle: Text(attachment.url),
             );
-          }).toList(),
+          }),
           ElevatedButton(
             onPressed: () {
               final newAttachment = Attachment(

@@ -20,10 +20,10 @@ class Attachment {
 
   factory Attachment.fromJson(Map<String, dynamic> json) {
     return Attachment(
-      fileName: json['fileName'],
-      mimetype: json['mimetype'],
-      size: json['size'],
-      url: json['url'],
+      fileName: json['fileName'] ?? '',
+      mimetype: json['mimetype'] ?? '',
+      size: json['size'] ?? 0,
+      url: json['url'] ?? '',
     );
   }
 }
@@ -42,14 +42,16 @@ class Comment {
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
-    var attachments = json['commentAttachment'] as List;
+    var attachments = json['commentAttachment'] as List? ?? [];
     List<Attachment> attachmentList =
         attachments.map((i) => Attachment.fromJson(i)).toList();
 
     return Comment(
-      user: json['user'],
-      defectComment: json['defectComment'],
-      commentDate: DateTime.parse(json['commentDate']),
+      user: json['user'] ?? '',
+      defectComment: json['defectComment'] ?? '',
+      commentDate: json['commentDate'] != null
+          ? DateTime.parse(json['commentDate'])
+          : DateTime.now(),
       commentAttachment: attachmentList,
     );
   }
@@ -72,8 +74,10 @@ class DefectDetail {
   DateTime modifiedDate;
   List<Attachment> defectAttachment;
   List<Comment> defectComment;
+  String id;
 
   DefectDetail({
+    required this.id,
     required this.defectTitle,
     required this.defectDescription,
     required this.defectStatus,
@@ -93,33 +97,38 @@ class DefectDetail {
   });
 
   factory DefectDetail.fromJson(Map<String, dynamic> json) {
-    var attachments = json['defectAttachment'] as List;
+    var attachments = json['defectAttachment'] as List? ?? [];
     List<Attachment> attachmentList =
         attachments.map((i) => Attachment.fromJson(i)).toList();
 
-    var comments = json['defectComment'] as List;
+    var comments = json['defectComment'] as List? ?? [];
     List<Comment> commentList =
         comments.map((i) => Comment.fromJson(i)).toList();
 
     return DefectDetail(
-      defectTitle: json['defectTitle'],
-      defectDescription: json['defectDescription'],
-      defectStatus: json['defectStatus'],
-      defectPriority: json['defectPriority'],
-      defectSeverity: json['defectSeverity'],
-      reproduceSteps: json['reproduceSteps'],
-      expectedResult: json['expectedResult'],
-      actualResult: json['actualResult'],
-      assignee: json['assignee'],
-      reporter: json['reporter'],
-      createdDate: DateTime.parse(json['createdDate']),
+      id: json['_id'] ?? '',
+      defectTitle: json['defectTitle'] ?? '',
+      defectDescription: json['defectDescription'] ?? '',
+      defectStatus: json['defectStatus'] ?? '',
+      defectPriority: json['defectPriority'] ?? '',
+      defectSeverity: json['defectSeverity'] ?? '',
+      reproduceSteps: json['reproduceSteps'] ?? '',
+      expectedResult: json['expectedResult'] ?? '',
+      actualResult: json['actualResult'] ?? '',
+      assignee: json['assignee'] ?? '',
+      reporter: json['reporter'] ?? '',
+      createdDate: json['createdDate'] != null
+          ? DateTime.parse(json['createdDate'])
+          : DateTime.now(),
       resolvedDate: json['resolvedDate'] != null
           ? DateTime.parse(json['resolvedDate'])
           : null,
       closedDate: json['closedDate'] != null
           ? DateTime.parse(json['closedDate'])
           : null,
-      modifiedDate: DateTime.parse(json['modifiedDate']),
+      modifiedDate: json['modifiedDate'] != null
+          ? DateTime.parse(json['modifiedDate'])
+          : DateTime.now(),
       defectAttachment: attachmentList,
       defectComment: commentList,
     );
@@ -128,6 +137,7 @@ class DefectDetail {
 
 class DefectDetailProvider with ChangeNotifier {
   DefectDetail _defect = DefectDetail(
+    id: '',
     defectTitle: '',
     defectDescription: '',
     defectStatus: 'New',
@@ -146,12 +156,12 @@ class DefectDetailProvider with ChangeNotifier {
 
   DefectDetail? _selectedDefect;
 
-  DefectDetail get defect => _defect;
+  DefectDetail? get defect => _selectedDefect;
 
   Future<void> fetchDefectDetails(String defectId) async {
+    await Future.delayed(const Duration(seconds: 2));
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString('token');
-    print('manoj ' + defectId);
     final response = await http.get(
       Uri.parse(Urls.getSingleDefectDetail + defectId),
       headers: <String, String>{

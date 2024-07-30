@@ -6,13 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Defect {
   final String id;
-  //final String projectTitle;
   final String defectTitle;
   final String defectStatus;
   final String assignedTo;
   final DateTime createdDate;
   final DateTime modifiedDate;
-  
 
   Defect({
     required this.id,
@@ -27,7 +25,6 @@ class Defect {
   factory Defect.fromJson(Map<String, dynamic> json) {
     return Defect(
       id: json['_id'],
-      //projectTitle: json['projectTitle'],
       defectTitle: json['defectTitle'],
       defectStatus: json['defectStatus'],
       assignedTo: json['assignedTo'],
@@ -52,7 +49,7 @@ class DefectsProvider with ChangeNotifier {
 
     // Simulate network request
     await Future.delayed(const Duration(seconds: 2));
-    
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? token = preferences.getString('token');
     try {
@@ -66,8 +63,7 @@ class DefectsProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         List<dynamic> defectsList = jsonDecode(response.body);
-        _defects =
-            defectsList.map((json) => Defect.fromJson(json)).toList();
+        _defects = defectsList.map((json) => Defect.fromJson(json)).toList();
         notifyListeners();
       } else {
         throw Exception('Failed to load defects');
