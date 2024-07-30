@@ -1,5 +1,7 @@
 import 'package:defect_tracking_system/screens/auth/login.dart';
 import 'package:defect_tracking_system/screens/auth/providers/user_provider.dart';
+import 'package:defect_tracking_system/screens/defects/defect_detail.dart';
+import 'package:defect_tracking_system/screens/defects/providers/defect_detail_provider.dart';
 import 'package:defect_tracking_system/screens/home.dart';
 import 'package:defect_tracking_system/screens/leaderboard/leaderboard.dart';
 import 'package:defect_tracking_system/screens/leaderboard/providers/leaderboard_provider.dart';
@@ -36,6 +38,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => UserAchievementProvider()),
     ChangeNotifierProvider(create: (_) => UserBadgeProvider()),
     ChangeNotifierProvider(create: (_) => ProfileProvider()),
+    ChangeNotifierProvider(create: (_) => DefectDetailProvider())
   ], child: const DefectTrackingApp()));
 }
 
@@ -56,7 +59,8 @@ class DefectTrackingApp extends StatelessWidget {
         '/leaderboard': (_) => const LeaderboardPage(),
         '/profile': (_) => const UserProfilePage(),
         '/splash': (_) => const SplashPage(),
-        '/add-review': (_) => const InsertReviewScreen()
+        '/add-review': (_) => const InsertReviewScreen(),
+        '/defect-detail': (_) => const DefectFormScreen()
       },
       theme: ThemeData(
         listTileTheme: ListTileThemeData(

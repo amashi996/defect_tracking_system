@@ -180,11 +180,12 @@ class DefectDataTableSource extends DataTableSource {
       DataCell(
         ElevatedButton(
           onPressed: () {
-            // Implement navigation to defect detail page
-            // Navigator.of(context).pushNamed(
-            //   DefectDetailPage.routeName,
-            //   arguments: defect.id,
-            // );
+            print('manoj ${defect.id}');
+            //   Implement navigation to defect detail page
+            Navigator.of(context).pushNamed(
+              '/defect-detail',
+              arguments: defect.id,
+            );
           },
           child: const Text('Manage'),
         ),
