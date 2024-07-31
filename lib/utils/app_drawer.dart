@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-
-// import 'package:defect_tracking_system/utils/navigation_provider.dart';
-
 import '../constants/route_names.dart';
 import 'app_route_observer.dart';
 
-/// The navigation drawer for the app.
-/// This listens to changes in the route to update which page is currently been shown
 class AppDrawer extends StatefulWidget {
   const AppDrawer({required this.permanentlyDisplay, super.key});
 
@@ -67,9 +61,6 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
       ),
     );
   }
-
-  /// Closes the drawer if applicable (which is only when it's not been displayed permanently) and navigates to the specified route
-  /// In a mobile layout, the a modal drawer is used so we need to explicitly close it when the user selects a page to display
   Future<void> _navigateTo(BuildContext context, String routeName) async {
     if (widget.permanentlyDisplay) {
       Navigator.pop(context);
@@ -81,13 +72,19 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
     //final navigationProvider = Provider.of<NavigationProvider>(context);
 
     return [
-      const UserAccountsDrawerHeader(
-        accountName: Text("Name Here"),
-        accountEmail: Text("email@here.com"),
-        currentAccountPicture: CircleAvatar(
-          radius: 50,
-          backgroundImage: NetworkImage(
-              "https://avatars.githubusercontent.com/u/40816448?v=4"),
+       DrawerHeader(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+        ),
+        child: const Align(
+          alignment: Alignment.centerLeft,
+          child: CircleAvatar(
+            radius: 40,
+            child: Icon(
+              Icons.account_circle,
+              size: 40,
+            ),
+          ),
         ),
       ),
       Padding(
@@ -99,9 +96,7 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
             await _navigateTo(context, RouteNames.home);
           },
           selected: _selectedRoute == RouteNames.home,
-          //selected: navigationProvider.selectedMenu == RouteNames.categories,
           style: Theme.of(context).listTileTheme.style,
-          // style: Listst,
         ),
       ),
       Padding(
@@ -113,7 +108,6 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
             await _navigateTo(context, RouteNames.reviews);
           },
           selected: _selectedRoute == RouteNames.reviews,
-          //selected: navigationProvider.selectedMenu == RouteNames.reviews,
           style: Theme.of(context).listTileTheme.style,
         ),
       ),
@@ -150,67 +144,6 @@ class _AppDrawerState extends State<AppDrawer> with RouteAware {
           selected: _selectedRoute == RouteNames.profile,
         ),
       ),
-      // ListTile(
-      //   leading: NavPageIcons.codeIcon,
-      //   title: const Text(PageTitles.projects),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.projects);
-      //   },
-      //   selected: _selectedRoute == RouteNames.projects,
-      // ),
-      // ListTile(
-      //   leading: NavPageIcons.localPlayIcon,
-      //   title: const Text(PageTitles.awards),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.awards);
-      //   },
-      //   selected: _selectedRoute == RouteNames.awards,
-      // ),
-      // // ListTile(
-      // //   leading: NavPageIcons.buildIcon,
-      // //   title: const Text(PageTitles.skills),
-      // //   onTap: () async {
-      // //     await _navigateTo(context, RouteNames.skills);
-      // //   },
-      // //   selected: _selectedRoute == RouteNames.skills,
-      // // ),
-      // ListTile(
-      //   leading: NavPageIcons.article,
-      //   title: const Text(PageTitles.publications),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.publications);
-      //   },
-      //   selected: _selectedRoute == RouteNames.publications,
-      // ),
-      // ListTile(
-      //   leading: SvgPicture.asset(
-      //     'assets/svg/fireabse.svg',
-      //     width: 24,
-      //     height: 24,
-      //   ),
-      //   title: const Text(PageTitles.certifications),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.certifications);
-      //   },
-      //   selected: _selectedRoute == RouteNames.certifications,
-      // ),
-      // ListTile(
-      //   leading: NavPageIcons.mailIcon,
-      //   title: const Text(PageTitles.contact),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.contact);
-      //   },
-      //   selected: _selectedRoute == RouteNames.contact,
-      // ),
-      // const Divider(thickness: 2),
-      // ListTile(
-      //   leading: const Icon(Icons.settings),
-      //   title: const Text(PageTitles.settings),
-      //   onTap: () async {
-      //     await _navigateTo(context, RouteNames.settings);
-      //   },
-      //   selected: _selectedRoute == RouteNames.settings,
-      // ),
     ];
   }
 

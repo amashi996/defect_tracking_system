@@ -74,7 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/profile');
+                            },
                             child: const Text('View More'),
                           ),
                         ),
@@ -82,93 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-
-                /*Expanded(
-                  child: Container(
-                    color: Colors.purple[100],
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'My Badges',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8.0), // Reduced the height
-                        FutureBuilder(
-                          future: _fetchBadgesFuture,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                  child: Text('Error: ${snapshot.error}'));
-                            } else {
-                              final earnedBadges =
-                                  Provider.of<UserBadgeProvider>(context)
-                                      .userBadges;
-                              if (earnedBadges.isEmpty) {
-                                return const Center(
-                                    child: Text('No badges earned yet.'));
-                              } else {
-                                return GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount:
-                                        3, // Display 3 badge sets per row
-                                    crossAxisSpacing: 8.0,
-                                    mainAxisSpacing: 8.0,
-                                    childAspectRatio: 1.0,
-                                  ),
-                                  itemCount: earnedBadges.length,
-                                  itemBuilder: (ctx, index) {
-                                    final badge = earnedBadges[index];
-                                    return Tooltip(
-                                      message:
-                                          '${badge.name}\n${badge.description}',
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          CircleAvatar(
-                                            radius:
-                                                20.0, // Adjust the size to make it smaller
-                                            backgroundImage: badge
-                                                    .icon.isNotEmpty
-                                                ? NetworkImage(badge.icon)
-                                                : const AssetImage(
-                                                        'assets/placeholder.png')
-                                                    as ImageProvider,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 10.0),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text('View More'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),*/
-               
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -220,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/all-reviews');
+                              Navigator.of(context).pushNamed('/profile');
                             },
                             child: const Text('View More'),
                           ),

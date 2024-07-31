@@ -22,7 +22,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      pageTitle: const Text('Reviews'),
+      pageTitle: const Text('All Reviews'),
       showBackButton: false,
       body: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
@@ -43,8 +43,8 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                 Review review = reviewProvider.reviews[index];
                 return ListTile(
                   leading: const Icon(Icons.account_circle),
-                  title: Text(review.reviewerName),
-                  subtitle: Text(review.reviewText),
+                  subtitle: Text('From:' + review.reviewerName),
+                  title: Text('Review:' + review.reviewText),
                   trailing: Text(
                     '${review.likes.length} likes',
                     style: const TextStyle(color: Colors.grey),
@@ -67,3 +67,4 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
     );
   }
 }
+

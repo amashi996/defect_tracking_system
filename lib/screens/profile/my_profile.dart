@@ -52,7 +52,7 @@ class _UserProfilePageState extends State<UserProfilePage>
             tabs: const [
               Tab(icon: Icon(Icons.person), text: 'My Profile'),
               Tab(icon: Icon(Icons.reviews), text: 'My Reviews'),
-              Tab(icon: Icon(Icons.badge), text: 'My Badges'),
+              Tab(icon: Icon(Icons.badge), text: 'My Achievements & Badges'),
             ],
           ),
         ),
@@ -498,8 +498,8 @@ class PaginatedReviews extends StatelessWidget {
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(review.reviewerAvatar),
               ),
-              title: Text('${review.reviewerName} (${review.reviewerEmail})'),
-              subtitle: Text(review.reviewText),
+              subtitle: Text('From:' + '${review.reviewerName} (${review.reviewerEmail})'),
+              title: Text(review.reviewText),
             );
           },
         ),
@@ -694,7 +694,7 @@ class MyAchievementsContent extends StatelessWidget {
                         return ExpansionTile(
                           leading: const Icon(Icons.star_border, color: Colors.grey),
                           title: const Text(
-                            'Pending Achievements',
+                            'All Achievements',
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           children: [
@@ -737,18 +737,6 @@ class MyAchievementsContent extends StatelessWidget {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         const SizedBox(height: 12.0),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.grey,
-                                            foregroundColor: Colors.black,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                            ),
-                                          ),
-                                          onPressed: null,
-                                          child: const Text('Pending Achievement'),
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -876,7 +864,7 @@ class MyBadgesContent extends StatelessWidget {
                         return ExpansionTile(
                           leading: const Icon(Icons.card_giftcard_outlined, color: Colors.grey),
                           title: const Text(
-                            'Pending Badges',
+                            'All Badges',
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           children: [
@@ -921,18 +909,6 @@ class MyBadgesContent extends StatelessWidget {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         const SizedBox(height: 12.0),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.grey,
-                                            foregroundColor: Colors.black,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                            ),
-                                          ),
-                                          onPressed: null,
-                                          child: const Text('Pending Badge'),
-                                        ),
                                       ],
                                     ),
                                   ),
