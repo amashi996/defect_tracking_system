@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:defect_tracking_system/screens/reviews/providers/review_model.dart';
 import 'package:defect_tracking_system/screens/reviews/providers/review_provider.dart';
 import 'package:defect_tracking_system/screens/reviews/review_detail_page.dart';
@@ -43,8 +45,8 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                 Review review = reviewProvider.reviews[index];
                 return ListTile(
                   leading: const Icon(Icons.account_circle),
-                  subtitle: Text('From:' + review.reviewerName),
-                  title: Text('Review:' + review.reviewText),
+                  subtitle: Text('From:\t' + review.reviewerName),
+                  title: Text(review.reviewText),
                   trailing: Text(
                     '${review.likes.length} likes',
                     style: const TextStyle(color: Colors.grey),

@@ -498,7 +498,7 @@ class PaginatedReviews extends StatelessWidget {
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(review.reviewerAvatar),
               ),
-              subtitle: Text('From:' + '${review.reviewerName} (${review.reviewerEmail})'),
+              subtitle: Text('From:\t' + '${review.reviewerName} (${review.reviewerEmail})'),
               title: Text(review.reviewText),
             );
           },
@@ -813,12 +813,14 @@ class MyBadgesContent extends StatelessWidget {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
-                                              CircleAvatar(
+                                              const CircleAvatar(
                                                 radius: 40.0,
-                                                backgroundImage: badge.icon.isNotEmpty
-                                                    ? NetworkImage(badge.icon)
-                                                    : const AssetImage('assets/placeholder.png')
-                                                        as ImageProvider,
+                                                backgroundColor: Colors.transparent,
+                                          child: Icon(
+                                            Icons.badge_rounded,
+                                            size: 80.0,
+                                            color: Colors.grey,
+                                          ),
                                               ),
                                               const SizedBox(height: 8.0),
                                               Text(
@@ -887,12 +889,14 @@ class MyBadgesContent extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        CircleAvatar(
+                                        const CircleAvatar(
                                           radius: 40.0,
-                                          backgroundImage: badge.icon.isNotEmpty
-                                              ? NetworkImage(badge.icon)
-                                              : const AssetImage('assets/placeholder.png')
-                                                  as ImageProvider,
+                                          backgroundColor: Colors.transparent,
+                                          child: Icon(
+                                            Icons.badge_rounded,
+                                            size: 80.0,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                         const SizedBox(height: 8.0),
                                         Text(
