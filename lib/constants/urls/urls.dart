@@ -27,4 +27,5 @@ class Urls {
   static const String getLoggedUserBadges = '$baseUrl/api/auth/badges';
 
   static const String getSingleDefectDetail = '$baseUrl/api/defects/defect/';
+  static const String getSingleUserDetails = '$baseUrl/api/auth/user/';
 }

@@ -135,6 +135,22 @@ class DefectDetail {
   }
 }
 
+class User {
+  final String id;
+  final String name;
+  final String avatar;
+
+  User({
+    required this.avatar,
+    required this.id,
+    required this.name,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(id: json['_id'], name: json['name'], avatar: json['avatar']);
+  }
+}
+
 class DefectDetailProvider with ChangeNotifier {
   DefectDetail _defect = DefectDetail(
     id: '',
@@ -157,6 +173,34 @@ class DefectDetailProvider with ChangeNotifier {
   DefectDetail? _selectedDefect;
 
   DefectDetail? get defect => _selectedDefect;
+  final Map<String, User> _userCache = {};
+
+  Future<void> fetchUserDetails(String userId) async {
+    if (_userCache.containsKey(userId)) {
+      return;
+    }
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString('token');
+    final response = await http.get(
+      Uri.parse(Urls.getSingleUserDetails + userId),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'x-auth-token': token!,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      User user = User.fromJson(jsonDecode(response.body));
+      _userCache[userId] = user;
+      notifyListeners();
+    } else {
+      throw Exception('Failed to load user details');
+    }
+  }
+
+  User? getUser(String userId) {
+    return _userCache[userId];
+  }
 
   Future<void> fetchDefectDetails(String defectId) async {
     await Future.delayed(const Duration(seconds: 2));
@@ -172,6 +216,8 @@ class DefectDetailProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       _selectedDefect = DefectDetail.fromJson(jsonDecode(response.body));
+      await fetchUserDetails(_selectedDefect!.assignee);
+      await fetchUserDetails(_selectedDefect!.reporter);
       notifyListeners();
     } else {
       throw Exception('Failed to load review details');

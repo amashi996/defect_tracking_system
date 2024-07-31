@@ -60,6 +60,13 @@ class _DefectFormScreenState extends State<DefectFormScreen> {
 Widget viewDefectDetailForm(DefectDetail defect, BuildContext context) {
   final formKey = GlobalKey<FormState>();
   final defectProvider = Provider.of<DefectDetailProvider>(context);
+
+  // Fetch the assignee and reporter names
+  final assignee =
+      defectProvider.getUser(defect.assignee)?.name ?? 'Loading...';
+  final reporter =
+      defectProvider.getUser(defect.reporter)?.name ?? 'Loading...';
+
   return Form(
     key: formKey,
     child: SingleChildScrollView(
@@ -148,14 +155,14 @@ Widget viewDefectDetailForm(DefectDetail defect, BuildContext context) {
             },
           ),
           TextFormField(
-            initialValue: defect.assignee,
+            initialValue: assignee,
             decoration: const InputDecoration(labelText: 'Assignee'),
             onSaved: (value) {
               defect.assignee = value!;
             },
           ),
           TextFormField(
-            initialValue: defect.reporter,
+            initialValue: reporter,
             decoration: const InputDecoration(labelText: 'Reporter'),
             onSaved: (value) {
               defect.reporter = value!;
@@ -179,7 +186,8 @@ Widget viewDefectDetailForm(DefectDetail defect, BuildContext context) {
           ...defect.defectComment.map((comment) {
             return ListTile(
               title: Text(comment.defectComment),
-              subtitle: Text(comment.user),
+              subtitle: Text(
+                  defectProvider.getUser(comment.user)?.name ?? comment.user),
             );
           }),
           ElevatedButton(
